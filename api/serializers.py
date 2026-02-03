@@ -26,11 +26,11 @@ class ClientTypeSerializer(serializers.ModelSerializer):
         fields = ['name']
 
 class ClientSerializer(serializers.ModelSerializer):
-    client_type = ClientTypeSerializer(read_only=True, source='client_type')
+    client_type = serializers.SlugRelatedField(read_only=True, slug_field='name')
 
     class Meta:
         model = Client
-        fields = ['code', 'name', 'client_type', 'address', 'neighborhood', 'municipality', 'state', 'latitude', 'longitude', 'sector', 'market']
+        fields = ['id', 'code', 'name', "client_type", 'address', 'neighborhood', 'municipality', 'state', 'latitude', 'longitude', 'sector', 'market']
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:

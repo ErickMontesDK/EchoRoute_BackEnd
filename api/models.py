@@ -9,13 +9,15 @@ class ClientType(models.Model):
         verbose_name="Client Type Name",
         help_text="The category or type of the client (e.g., Retail, Wholesale)."
     )
+
+    abbreviation = models.CharField(max_length=5, verbose_name="Abbreviation", null=True, blank=True)
     
     class Meta:
         verbose_name = "Client Type"
         verbose_name_plural = "Client Types"
 
     def __str__(self):
-        return self.name
+        return f"{self.name} ({self.abbreviation})"
 
 class Client(models.Model):
     """
