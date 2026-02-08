@@ -29,8 +29,12 @@ ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
     '.railway.app', 
+    os.getenv("RAILWAY_PUBLIC_DOMAIN", ""),
 ]
 
+CSRF_TRUSTED_ORIGINS = [
+    "https://echoroutebackend-production.up.railway.app",
+]
 
 # Application definition
 
