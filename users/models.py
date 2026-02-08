@@ -14,6 +14,11 @@ class User(AbstractUser):
     )
     role = models.CharField(max_length=10, choices=ROLE_CHOICES, default=DELIVERY)
 
+<<<<<<< HEAD
+=======
+    is_deleted = models.BooleanField(default=False, verbose_name="Is Deleted")
+
+>>>>>>> development
     def __str__(self):
         return f"{self.first_name} {self.last_name} - ({self.role})"
 
