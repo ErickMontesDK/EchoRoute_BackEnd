@@ -53,8 +53,8 @@ class Client(models.Model):
         blank=True
     )
     
-    latitude = models.DecimalField(max_digits=9, decimal_places=6, null=False, blank=False)
-    longitude = models.DecimalField(max_digits=9, decimal_places=6, null=False, blank=False)
+    latitude = models.DecimalField(max_digits=12, decimal_places=9, null=False, blank=False)
+    longitude = models.DecimalField(max_digits=12, decimal_places=9, null=False, blank=False)
     
     sector = models.CharField(max_length=100, null=True, blank=True, verbose_name="Sector")
     market = models.CharField(max_length=100, null=True, blank=True, verbose_name="Market")
@@ -94,13 +94,13 @@ class Visit(models.Model):
     
     visited_at = models.DateTimeField(verbose_name="Visited At", null=False, blank=False, auto_now_add=False)
     
-    latitude_recorded = models.DecimalField(max_digits=9, decimal_places=6, null=False, blank=False)
-    longitude_recorded = models.DecimalField(max_digits=9, decimal_places=6, null=False, blank=False)
+    latitude_recorded = models.DecimalField(max_digits=12, decimal_places=9, null=False, blank=False)
+    longitude_recorded = models.DecimalField(max_digits=12, decimal_places=9, null=False, blank=False)
     
     is_productive = models.BooleanField(default=False, verbose_name="Is Productive")
     is_deleted = models.BooleanField(default=False, verbose_name="Is Deleted")
     is_valid = models.BooleanField(default=False, verbose_name="Is Valid")
-    distance_from_client = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+    distance_from_client = models.DecimalField(max_digits=12, decimal_places=6, null=True, blank=True)
     notes = models.TextField(null=True, blank=True, verbose_name="Notes")
 
     class Meta:

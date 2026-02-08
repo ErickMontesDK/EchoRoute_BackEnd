@@ -23,7 +23,6 @@ def get_client_types(request):
 @api_view(['GET', 'POST'])
 def visit_list(request):
     user_id = request.user.id
-    print("user: ", user_id)
 
     if request.method == 'GET':
         visits = Visit.objects.all()
@@ -32,8 +31,8 @@ def visit_list(request):
     
     elif request.method == 'POST':
         request.data['deliverer'] = user_id
-        print(request.data)
         serializer = VisitSerializer(data=request.data)
+        
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -63,6 +62,7 @@ def visit_detail(request, pk):
 
 @api_view(['GET', 'POST'])
 def client_list(request):
+    print("client_list")
     if request.method == 'GET':
         clients = Client.objects.all()
         serializer = ClientSerializer(clients, many=True)

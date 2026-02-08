@@ -9,7 +9,7 @@ class ClientAdmin(admin.ModelAdmin):
     list_display = ("id",'code', 'name', 'client_type', 'address', 'neighborhood', 'municipality', 'state', 'latitude', 'longitude', 'sector', 'market')
 
 class VisitAdmin(admin.ModelAdmin):
-    list_display = ("id",'client', 'deliverer', 'visited_at', 'latitude_recorded', 'longitude_recorded', 'is_productive', 'is_valid', 'notes')
+    list_display = ("id",'client', 'deliverer', 'visited_at', 'latitude_recorded', 'longitude_recorded', 'is_productive', 'is_valid', 'distance_from_client', 'notes')
 
 class RouteAdmin(admin.ModelAdmin):
     list_display = ("id",'name', 'deliverer', 'day_of_week')

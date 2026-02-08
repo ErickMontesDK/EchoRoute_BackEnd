@@ -50,8 +50,8 @@ class Migration(migrations.Migration):
                 ('market', models.CharField(blank=True, max_length=100, null=True, verbose_name='Market')),
                 ('is_active', models.BooleanField(default=True, verbose_name='Is Active')),
                 ('is_deleted', models.BooleanField(default=False, verbose_name='Is Deleted')),
-                ('client_type', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='clients', to='api.clienttype', verbose_name='Type')),
-                ('route', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, related_name='clients', to='api.route', verbose_name='Route')),
+                ('client_type', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='clients', to='visits.clienttype', verbose_name='Type')),
+                ('route', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, related_name='clients', to='visits.route', verbose_name='Route')),
             ],
             options={
                 'verbose_name': 'Client',
@@ -71,7 +71,7 @@ class Migration(migrations.Migration):
                 ('is_valid', models.BooleanField(default=False, verbose_name='Is Valid')),
                 ('distance_from_client', models.DecimalField(blank=True, decimal_places=6, max_digits=9, null=True)),
                 ('notes', models.TextField(blank=True, null=True, verbose_name='Notes')),
-                ('client', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='visits', to='api.client', verbose_name='Client')),
+                ('client', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='visits', to='visits.client', verbose_name='Client')),
                 ('deliverer', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='visits', to=settings.AUTH_USER_MODEL, verbose_name='Deliverer')),
             ],
             options={
