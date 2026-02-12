@@ -67,6 +67,9 @@ class Client(models.Model):
         verbose_name_plural = "Clients"
         ordering = ['name']
 
+    def get_full_address(self):
+        return f"{self.address}, {self.neighborhood}.{self.municipality}, {self.state}"
+
     def __str__(self):
         return f"{self.code} - {self.name}"
 
@@ -106,7 +109,6 @@ class Visit(models.Model):
     class Meta:
         verbose_name = "Visit"
         verbose_name_plural = "Visits"
-        ordering = ['-visited_at']
 
     def __str__(self):
         client_name = getattr(self.client, "name", "Unknown client")

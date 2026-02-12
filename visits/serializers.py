@@ -33,10 +33,11 @@ class ClientTypeSerializer(serializers.ModelSerializer):
 
 class ClientSerializer(serializers.ModelSerializer):
     client_type = serializers.SlugRelatedField(read_only=True, slug_field='name')
+    full_address = serializers.CharField(source='get_full_address', read_only=True)
 
     class Meta:
         model = Client
-        fields = ['id', 'code', 'name', "client_type", 'address', 'neighborhood', 'municipality', 'state', 'latitude', 'longitude', 'sector', 'market']
+        fields = ['id', 'code', 'name', "client_type", 'address', 'neighborhood', 'municipality', 'state', 'full_address', 'latitude', 'longitude', 'sector', 'market']
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -73,10 +74,8 @@ class VisitSerializer(serializers.ModelSerializer):
             client_lat = client.latitude
             client_lng = client.longitude
 
-            # Earth radius in meters (IUGG mean radius: 6371008.8 m)
             earth_radius = 6371008.8
             
-            # Ensure coordinates are floats for precision calculation
             lat1, lon1 = map(radians, [float(client_lat), float(client_lng)])
             lat2, lon2 = map(radians, [float(lat_scan), float(lng_scan)])
             
@@ -90,7 +89,6 @@ class VisitSerializer(serializers.ModelSerializer):
             print(f"Calculated distance: {distance} meters")
             data['distance_from_client'] = distance
 
-            # Validity check (e.g., within 100 meters)
             data['is_valid'] = distance < 100
             
         return data
