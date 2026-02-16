@@ -68,7 +68,7 @@ class Client(models.Model):
         ordering = ['name']
 
     def get_full_address(self):
-        return f"{self.address}, {self.neighborhood}.{self.municipality}, {self.state}"
+        return f"{self.address}, {self.neighborhood}. {self.municipality}, {self.state}"
 
     def __str__(self):
         return f"{self.code} - {self.name}"
