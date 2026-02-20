@@ -28,6 +28,7 @@ class VisitSerializer(serializers.ModelSerializer):
     client_details = ClientSerializer(source='client', read_only=True)
     deliverer_details = UserSerializer(source='deliverer', read_only=True)
 
+
     class Meta:
         model = Visit
         fields = [
@@ -41,7 +42,8 @@ class VisitSerializer(serializers.ModelSerializer):
             'longitude_recorded',
             'is_productive', 
             'is_valid', 
-            'notes'
+            'notes',
+            'is_deleted'
         ]
 
     def validate(self, data):

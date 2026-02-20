@@ -6,9 +6,10 @@ from rest_framework.pagination import PageNumberPagination
 from .models import ClientType, Visit, Client
 from .serializers import *
 from django.db.models import Q
+from rest_framework.exceptions import NotFound, ValidationError, MethodNotAllowed
 
 class StandardPagination(PageNumberPagination):
-    page_size = 5
+    page_size = 10
     page_size_query_param = 'page_size'
     max_page_size = 100
 
@@ -38,7 +39,13 @@ def visit_list(request):
 
     if request.method == 'GET':
         
-        visits = Visit.objects.all()
+        visits = Visit.objects.all().filter(is_deleted=False)
+
+        sorting = request.query_params.get('sorting')
+        if sorting:
+            visits = visits.order_by(sorting)
+        else:
+            visits = visits.order_by('-id')
 
         search_term = request.query_params.get('search_term')
         client_type = request.query_params.get('client_type')
@@ -79,7 +86,6 @@ def visit_list(request):
         if date_to:
             visits = visits.filter(visited_at__lte=date_to)
 
-
         paginator = StandardPagination()
         result_page = paginator.paginate_queryset(visits, request)
         serializer = VisitSerializer(result_page, many=True)
@@ -93,35 +99,42 @@ def visit_list(request):
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        raise ValidationError(serializer.errors)
 
 
-@api_view(['GET', 'PUT', 'DELETE'])
+@api_view(['GET', 'PATCH', 'DELETE'])
 def visit_detail(request, pk):
     
-    visit = get_object_or_404(Visit, pk=pk)
+    try:
+        visit = Visit.objects.get(pk=pk, is_deleted=False)
+    except Visit.DoesNotExist:
+        raise NotFound("Visit not found")
     
     if request.method == 'GET':
         serializer = VisitSerializer(visit)
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
     
-    elif request.method == 'PUT':
-        serializer = VisitSerializer(visit, data=request.data)
+    elif request.method == 'PATCH':
+        serializer = VisitSerializer(visit, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
+        raise ValidationError(serializer.errors)
     
     elif request.method == 'DELETE':
-        visit.delete()
-        return Response({'message': 'Visit deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
+        visit.is_deleted = True
+        visit.save()
+        return Response({'message': 'Visit marked as deleted'}, status=status.HTTP_204_NO_CONTENT)
+    
+    raise MethodNotAllowed(request.method)
 
 
 @api_view(['GET', 'POST'])
 def client_list(request):
     print("client_list")
     if request.method == 'GET':
-        clients = Client.objects.all()
+        clients = Client.objects.all().filter(is_deleted=False)
         
         code = request.query_params.get('code')
         if code:
@@ -173,7 +186,8 @@ def client_list(request):
 
 @api_view(['GET', 'PUT', 'DELETE'])
 def client_detail(request, code):
-    client = get_object_or_404(Client, code=code)
+    # Only get clients that are NOT marked as deleted
+    client = get_object_or_404(Client, code=code, is_deleted=False)
     
     if request.method == 'GET':
         serializer = ClientSerializer(client)
@@ -187,5 +201,7 @@ def client_detail(request, code):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
     elif request.method == 'DELETE':
-        client.delete()
-        return Response({'message': 'Client deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
+        # Perform soft delete
+        client.is_deleted = True
+        client.save()
+        return Response({'message': 'Client marked as deleted'}, status=status.HTTP_204_NO_CONTENT)
