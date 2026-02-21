@@ -130,6 +130,20 @@ def visit_detail(request, pk):
     raise MethodNotAllowed(request.method)
 
 
+@api_view(['GET'])
+def client_code_available(request):
+    if request.method == 'GET':
+        code = request.query_params.get('code', None)
+
+        if code is None:
+            return Response({'message': 'Code is required'}, status=status.HTTP_400_BAD_REQUEST)
+
+        if Client.objects.filter(code=code).exists():
+            return Response({'message': 'Client code already exists', 'available': False}, status=status.HTTP_200_OK)
+        else:
+            return Response({'message': 'Client code is available', 'available': True}, status=status.HTTP_200_OK)
+
+
 @api_view(['GET', 'POST'])
 def client_list(request):
     print("client_list")
@@ -176,6 +190,7 @@ def client_list(request):
         return Response(serializer.data)
     
     elif request.method == 'POST':
+        
         print(request.data)
         serializer = ClientSerializer(data=request.data)
         if serializer.is_valid():

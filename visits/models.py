@@ -36,8 +36,8 @@ class Client(models.Model):
         on_delete=models.PROTECT,
         related_name="clients",
         verbose_name="Type",
-        null=False,
-        blank=False
+        null=True,
+        blank=True
     )
     name = models.CharField(max_length=150, verbose_name="Business Name", null=False, blank=False)
     address = models.CharField(max_length=255, verbose_name="Address", null=True, blank=True)
@@ -59,7 +59,7 @@ class Client(models.Model):
     sector = models.CharField(max_length=100, null=True, blank=True, verbose_name="Sector")
     market = models.CharField(max_length=100, null=True, blank=True, verbose_name="Market")
     
-    is_active = models.BooleanField(default=True, verbose_name="Is Active")
+    is_active = models.BooleanField(default=False, verbose_name="Is Active")
     is_deleted = models.BooleanField(default=False, verbose_name="Is Deleted")
 
     class Meta:

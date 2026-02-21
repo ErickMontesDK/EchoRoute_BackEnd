@@ -6,5 +6,7 @@ urlpatterns = [
     path('visits/', visit_list, name='visit_list'),
     path('visits/<int:pk>/', visit_detail, name='visit_detail'),
     path('clients/', client_list, name='client_list'),
+    path('clients/code-available/', client_code_available, name='client_code_available'),
     path('clients/<str:code>/', client_detail, name='client_detail'),
+    path('clients/', client_list, name='client_list'),
 ]
